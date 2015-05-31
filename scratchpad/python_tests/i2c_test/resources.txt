@@ -2,3 +2,5 @@ https://learn.adafruit.com/setting-up-io-python-library-on-beaglebone-black/i2c
 http://www.arduino.cc/en/Tutorial/MasterReader
 http://www.arduino.cc/en/Tutorial/MasterWriter
 https://github.com/graycatlabs/PyBBIO/wiki
+
+http://binerry.de/post/27067411903/i2c-level-shifter-i2c-bridge
