@@ -1,0 +1,4 @@
+https://learn.adafruit.com/setting-up-io-python-library-on-beaglebone-black/i2c
+http://www.arduino.cc/en/Tutorial/MasterReader
+http://www.arduino.cc/en/Tutorial/MasterWriter
+https://github.com/graycatlabs/PyBBIO/wiki
