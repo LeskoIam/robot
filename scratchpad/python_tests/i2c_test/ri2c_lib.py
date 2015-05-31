@@ -4,9 +4,8 @@ __author__ = 'Lesko'
 # When it's bad, it's better than nothing.
 # When it lies to you, it may be a while before you realize something's wrong.
 
-
 """
-To be used with slaveRecive_pyBBIO.ino
+To be used with slaveRecive_pyBBIO.ino ("robot/scratchpad/arduino/i2c_comm/slaveRecive_pyBBIO/slaveRecive_pyBBIO.ino")
 """
 import bbio
 
@@ -14,9 +13,14 @@ import bbio
 class MyI2C(object):
 
     def __init__(self, i2c_address, debug=False):
+        """BeagleBone Black I2C library
+
+        :param i2c_address: Address of the i2c device
+        :param debug: Use debug prints or not
+        """
         self.i2c_address = i2c_address
         self.debug = debug
-        self.bbio = bbio
+        self._bbio = bbio
         self.i2c = bbio.I2C2
         self._debug("__init__() done")
 
@@ -28,6 +32,18 @@ class MyI2C(object):
         if i2c_address is None:
             i2c_address = self.i2c_address
         self.i2c.write(i2c_address, data)
+
+    def delay_millis(self, millis):
+        """Causes delay of <millis> milliseconds
+
+        !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+        !! Will probably be removed.                       !!
+        !! Here only to expose self._bbio.delay() function !!
+        !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+        :param millis: Number of milliseconds to sleep
+        """
+        self._bbio.delay(millis)
 
     def open(self):
         return self.i2c.open()
@@ -66,12 +82,12 @@ class MyI2C(object):
             i2c_address = self.i2c_address
         return self.i2c.read(i2c_address, rx_len)
 
-    def transaction(self, tx_data, rx_len, delay=10, i2c_address=None):
+    def transaction(self, tx_data, rx_len, delay_millis=10, i2c_address=None):
         """First send <tx_string> then read <rx_len> characters (bytes)
 
         :param tx_data: String to send to i2c device
         :param rx_len: Number of characters (bytes) to read from i2c device
-        :param delay: Delay between read and write, must be some non-zero value (milliseconds)
+        :param delay_millis: Delay between read and write, must be some non-zero value (milliseconds)
         :param i2c_address: Address of the i2c device
         :return: Raw data received from i2c device
         """
@@ -79,7 +95,7 @@ class MyI2C(object):
             self.write_string(tx_data, i2c_address)
         elif isinstance(tx_data, (list, tuple)):
             self.write_list(tx_data, i2c_address)
-        self.bbio.delay(delay)
+        self._bbio.delay(delay_millis)
         return self.read(rx_len, i2c_address)
 
 if __name__ == '__main__':
