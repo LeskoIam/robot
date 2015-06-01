@@ -5,7 +5,7 @@ __author__ = 'Lesko'
 # When it lies to you, it may be a while before you realize something's wrong.
 
 """
-To be used with slaveRecive_pyBBIO.ino ("robot/scratchpad/arduino/i2c_comm/slaveRecive_pyBBIO/slaveRecive_pyBBIO.ino")
+To be used with slaveRecive_pyBBIO.ino ("robot/software/arduino/i2c_comm/slaveRecive_pyBBIO/slaveRecive_pyBBIO.ino")
 """
 import bbio
 
