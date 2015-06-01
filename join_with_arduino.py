@@ -6,6 +6,6 @@ __author__ = 'Lesko'
 import distutils.core
 
 from_dir = "D:/workspace/arduino/Robot"
-to_dir = "D:/workspace/robot/scratchpad/arduino"
+to_dir = "D:/workspace/robot/software/arduino"
 
 distutils.dir_util.copy_tree(from_dir, to_dir)
