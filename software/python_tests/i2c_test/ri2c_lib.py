@@ -8,7 +8,26 @@ __author__ = 'Lesko'
 To be used with slaveRecive_pyBBIO.ino ("robot/software/arduino/i2c_comm/slaveRecive_pyBBIO/slaveRecive_pyBBIO.ino")
 """
 import bbio
+import logging
 
+# create logger
+logger = logging.getLogger('robot')
+
+logger.setLevel(logging.ERROR)  # TODO: .DEBUG
+# add a file handler
+fh = logging.FileHandler('./robot_i2c.log', mode="w")
+fh.setLevel(logging.DEBUG)
+
+# create a formatter and set the formatter for the handler.
+frmt = logging.Formatter('[%(asctime)s - %(name)s] - %(levelname)s - %(message)s')
+fh.setFormatter(frmt)
+
+# add the Handler to the logger
+logger.addHandler(fh)
+
+consoleHandler = logging.StreamHandler()
+consoleHandler.setFormatter(frmt)
+logger.addHandler(consoleHandler)
 
 class MyI2C(object):
 
@@ -22,18 +41,21 @@ class MyI2C(object):
         self.debug = debug
         self._bbio = bbio
         self.i2c = bbio.I2C2
-        self._debug("__init__() done")
+        # self._debug("__init__() done")
+        logger.info("MyI2C.__init__ DONE")
 
     def _debug(self, message):
         if self.debug:
-            print "++dbg: {}".format(message)
+            # print "++dbg: {}".format(message)
+            logger.debug(message)
 
     def _write(self, i2c_address, data):
         if i2c_address is None:
             i2c_address = self.i2c_address
+        logger.info("MyI2C._write Writing {} to address {}". format(data, i2c_address))
         self.i2c.write(i2c_address, data)
 
-    def delay_millis(self, millis):
+    def delay_micros(self, us):
         """Causes delay of <millis> milliseconds
 
         !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
@@ -43,12 +65,14 @@ class MyI2C(object):
 
         :param millis: Number of milliseconds to sleep
         """
-        self._bbio.delay(millis)
+        self._bbio.delayMicroseconds(us)
 
     def open(self):
+        logger.info("MyI2C.open Opening i2c chanel")
         return self.i2c.open()
     
     def close(self):
+        logger.info("MyI2C.open Closing i2c chanel")
         return self.i2c.close()
 
     def write_list(self, tx_list, i2c_address=None):
@@ -80,9 +104,11 @@ class MyI2C(object):
         """
         if i2c_address is None:
             i2c_address = self.i2c_address
-        return self.i2c.read(i2c_address, rx_len)
+        ans = self.i2c.read(i2c_address, rx_len)
+        logger.info("MyI2C.read Read {} from address {}".format(ans, i2c_address))
+        return ans
 
-    def transaction(self, tx_data, rx_len, delay_millis=10, i2c_address=None):
+    def transaction(self, tx_data, rx_len, delay_microseconds=3000, i2c_address=None):
         """First send <tx_string> then read <rx_len> characters (bytes)
 
         :param tx_data: String to send to i2c device
@@ -95,18 +121,19 @@ class MyI2C(object):
             self.write_string(tx_data, i2c_address)
         elif isinstance(tx_data, (list, tuple)):
             self.write_list(tx_data, i2c_address)
-        self._bbio.delay(delay_millis)
+        self._bbio.delayMicroseconds(delay_microseconds)
         return self.read(rx_len, i2c_address)
 
 if __name__ == '__main__':
     import sys
 
-    my_string = " ".join(sys.argv[1:])
+    argv = sys.argv
+    my_string = " ".join(argv[1:])
     print my_string
     if len(my_string) < 1:
         my_string = "default test string"
 
-    i2c = MyI2C(i2c_address=8, debug=True)
+    i2c = MyI2C(i2c_address=8, debug=False)
     i2c.close()
     i2c.open()
 
