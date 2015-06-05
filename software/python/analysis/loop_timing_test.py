@@ -3,7 +3,7 @@ __author__ = 'Lesko'
 # When it's good, it's very good.
 # When it's bad, it's better than nothing.
 # When it lies to you, it may be a while before you realize something's wrong.
-from ri2c import MyI2C
+from ..i2c_module.ri2c import MyI2C
 import csv
 
 """
@@ -41,7 +41,7 @@ try:
                     us = 2500
                     n += 1
                     break
-                i2c.delay_micros(sleep)
+                i2c.delay_microseconds(sleep)
                 us -= 5
 except KeyboardInterrupt:
     avg = sum(fails)/len(fails)

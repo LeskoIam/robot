@@ -10,24 +10,34 @@ To be used with slaveRecive_pyBBIO.ino ("robot/software/arduino/i2c_comm/slaveRe
 import bbio
 import logging
 
-# create logger
+###################################################
+#                    Logging                      #
+###################################################
+#  Logger initialization will be moved to the top #
+#  of this module once it grows.                  #
+#                                                 #
+#                                                 #
+# Create logger                                   #
 logger = logging.getLogger('robot')
 
 logger.setLevel(logging.ERROR)  # TODO: .DEBUG
-# add a file handler
+# Add a file handler
 fh = logging.FileHandler('./robot_i2c.log', mode="w")
 fh.setLevel(logging.DEBUG)
-
-# create a formatter and set the formatter for the handler.
-frmt = logging.Formatter('[%(asctime)s - %(name)s] - %(levelname)s - %(message)s')
-fh.setFormatter(frmt)
-
-# add the Handler to the logger
+# Create a formatter and set the formatter for the handler.
+log_format_str = logging.Formatter('[%(asctime)s - %(name)s] - %(levelname)s - %(message)s')
+fh.setFormatter(log_format_str)
+# Add the Handler to the logger
 logger.addHandler(fh)
 
+# Add console handler
 consoleHandler = logging.StreamHandler()
-consoleHandler.setFormatter(frmt)
+consoleHandler.setFormatter(log_format_str)
 logger.addHandler(consoleHandler)
+#                                                 #
+#                                                 #
+###################################################
+
 
 class MyI2C(object):
 
@@ -55,7 +65,7 @@ class MyI2C(object):
         logger.info("MyI2C._write Writing {} to address {}". format(data, i2c_address))
         self.i2c.write(i2c_address, data)
 
-    def delay_micros(self, us):
+    def delay_microseconds(self, us):
         """Causes delay of <millis> milliseconds
 
         !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
@@ -63,7 +73,7 @@ class MyI2C(object):
         !! Here only to expose self._bbio.delay() function !!
         !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
-        :param millis: Number of milliseconds to sleep
+        :param us: Number of milliseconds to sleep
         """
         self._bbio.delayMicroseconds(us)
 
@@ -113,7 +123,7 @@ class MyI2C(object):
 
         :param tx_data: String to send to i2c device
         :param rx_len: Number of characters (bytes) to read from i2c device
-        :param delay_millis: Delay between read and write, must be some non-zero value (milliseconds)
+        :param delay_microseconds: Delay between read and write, must be some non-zero value (microseconds)
         :param i2c_address: Address of the i2c device
         :return: Raw data received from i2c device
         """

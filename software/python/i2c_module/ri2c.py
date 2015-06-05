@@ -6,7 +6,7 @@ __author__ = 'Lesko'
 from ri2c_lib import MyI2C
 
 """
-This a funny place...
+This... a funny place...
 
 ri2c - Robot i2c protocol.
 
@@ -19,6 +19,7 @@ Single arduino will support:
   - as many as possible IO pins should be accessible
 
 """
+
 
 class Ri2c(object):
 
